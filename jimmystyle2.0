@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>JimmyStyle 💈 | Enterprise Multi-Console, AI Cognitive Engine & Big Data Sandbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@0;1&family=Inter:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-main: #030305;
+    --bg-surface: #0a0a10;
+    --bg-card: rgba(16, 16, 28, 0.75);
+    --gold: #d4af37;
+    --gold-glow: rgba(212, 175, 55, 0.25);
+    --gold-gradient: linear-gradient(135deg, #a17f1a 0%, #d4af37 50%, #f9e7a3 100%);
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --success: #10b981;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --premium: #a855f7;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-focus: rgba(212, 175, 55, 0.45);
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-bottom: 90px;
+}
+
+/* SCROLLBAR ENGINE */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* SYSTEM UTILITIES / LIFECYCLE INTERFACES */
+#systemGlobalOverlayLoader {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 3, 5, 0.95);
+    z-index: 200000;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(12px);
+}
+.spinner-core {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(212, 175, 55, 0.1);
+    border-top: 4px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow: 0 0 30px var(--gold-glow);
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.global-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 350px;
+    z-index: 210000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.toast-card {
+    background: #0d0d16;
+    border-left: 4px solid var(--gold);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+
+/* MEMORY ALLOCATION DASHBOARD STRIP */
+.memory-heap-strip {
+    background: linear-gradient(90deg, #11111a 0%, #07070b 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* APPLICATION LAYOUT WRAPPER */
+.app-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+header.app-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+}
+.brand-identity h1 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.brand-identity p { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+/* REUSABLE GLASS COMPONENTS */
+.view-panel-node { display: none; }
+.view-panel-node.active-view { display: block; }
+
+.glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+.glass-card::before {
+    content: ''; position: absolute; top:0; left:0; width:100%; height:3px; background: var(--gold-gradient); opacity: 0.15;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* FORM ELEMENTS ARCHITECTURE */
+.form-grid-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; position: relative; }
+.form-input-premium {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+.form-input-premium:focus {
+    outline: none; border-color: var(--gold); box-shadow: 0 0 12px var(--gold-glow);
+}
+.password-toggle-eye {
+    position: absolute; right: 16px; top: 38px; cursor: pointer; color: var(--text-muted); font-size: 14px; user-select: none;
+}
+
+.btn-premium-core {
+    width: 100%; padding: 14px 24px; border: none; border-radius: var(--radius-md);
+    font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center;
+    justify-content: center; gap: 8px; transition: all 0.2s ease;
+    background: var(--gold-gradient); color: #000;
+}
+.btn-premium-core:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--gold-glow); }
+.btn-danger-core { background: linear-gradient(135deg, #991b1b 0%, #ef4444 100%); color: #fff; }
+.btn-secondary-core { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); }
+.btn-secondary-core:hover { background: rgba(255,255,255,0.1); }
+.btn-mini-action { padding: 6px 12px; font-size: 11px; width: auto; border-radius: 6px; }
+
+/* GRID SYSTEMS */
+.dashboard-metrics-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;
+}
+.metric-card-node {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-md);
+}
+.metric-card-node .val { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: #fff; margin-top: 4px; }
+
+/* DATA TABLES ARCHITECTURE */
+.enterprise-table-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: rgba(0,0,0,0.2); }
+.enterprise-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.enterprise-table th, .enterprise-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.enterprise-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 600; }
+.enterprise-table tr:hover { background: rgba(255,255,255,0.01); }
+
+/* CHATROOM & ONLINE MESSAGING ENGINE */
+.chat-workspace-grid { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 550px; }
+.chat-users-sidebar { border-right: 1px solid var(--border); padding-right: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.chat-user-row-node {
+    padding: 12px; border-radius: var(--radius-md); background: rgba(255,255,255,0.01); border: 1px solid var(--border);
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;
+}
+.chat-user-row-node:hover, .chat-user-row-node.active-chat-user { background: rgba(212,175,55,0.08); border-color: var(--gold); }
+.online-indicator-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+.offline-indicator-dot { width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; }
+
+.chat-conversation-viewport { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.chat-messages-stream { flex-grow: 1; overflow-y: auto; padding: 16px; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; border: 1px solid var(--border); }
+.message-bubble-node { padding: 10px 14px; border-radius: 14px; max-width: 75%; font-size: 13px; line-height: 1.4; word-wrap: break-word; }
+.message-bubble-node.mine { background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212,175,55,0.25); align-self: flex-end; border-bottom-right-radius: 2px; }
+.message-bubble-node.theirs { background: rgba(255,255,255,0.05); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 2px; }
+
+/* CHAT CONTEXT CONTROLS (FONTS & INTERFACE) */
+.chat-controls-toolbar { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; background: rgba(255,255,255,0.02); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
+.chat-toolbar-select { background: #000; color: #fff; border: 1px solid var(--border); font-size: 11px; padding: 4px 8px; border-radius: 4px; }
+
+/* COGNITIVE AI CHATBOT VIEWPORT WITH DEEP THINKING */
+.ai-brain-viewport { height: 450px; display: flex; flex-direction: column; justify-content: space-between; }
+.ai-stream-container { flex-grow: 1; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+.ai-thought-block {
+    background: rgba(168, 85, 247, 0.05); border-left: 2px dashed var(--premium); padding: 10px 14px; font-family: var(--font-mono); font-size: 11px; color: #c084fc; margin-bottom: 6px; border-radius: 4px;
+}
+.ai-response-block { background: rgba(212,175,55,0.05); border-left: 3px solid var(--gold); padding: 12px 16px; font-size: 13.5px; border-radius: 4px; line-height: 1.5; }
+
+/* ADAPTIVE VIRTUAL KEYBOARD INFRASTRUCTURE */
+.virtual-keyboard-wrapper {
+    background: #08080f; border-top: 2px solid var(--border); padding: 12px; display: none; flex-direction: column; gap: 6px;
+    position: fixed; bottom: 75px; left: 0; width: 100%; z-index: 150000; box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+}
+.keyboard-row { display: flex; justify-content: center; gap: 4px; width: 100%; }
+.key-node {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; padding: 14px 0; flex-grow: 1;
+    max-width: 45px; text-align: center; font-size: 15px; font-weight: 500; cursor: pointer; user-select: none; transition: background 0.1s;
+}
+.key-node:active { background: var(--gold); color: #000; }
+.key-node.key-wide { max-width: 80px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+.key-node.key-space { max-width: 320px; }
+
+/* MATRIZ DE HORARIOS DE CITA */
+.hours-matrix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 10px; }
+.hour-pill-element {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 10px; border-radius: 8px;
+    font-family: var(--font-mono); font-size: 12px; text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.hour-pill-element.selected { background: var(--gold-gradient); color: #000; font-weight: 700; }
+.hour-pill-element.blocked { background: rgba(239,68,68,0.15); color: var(--danger); border-color: rgba(239,68,68,0.3); }
+.hour-pill-element.taken { background: rgba(255,255,255,0.01); color: rgba(255,255,255,0.15); text-decoration: line-through; cursor: not-allowed; }
+
+/* COMMUNITY WALL POSTS PACKET */
+.community-wall-stream { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; max-height: 400px; overflow-y: auto; padding-right: 6px; }
+.wall-card-node { background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); position: relative; }
+.wall-card-media { width: 100%; max-height: 260px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
+
+/* FLOATING COGNITIVE SCIENTIFIC CALCULATOR - INICIALMENTE OCULTA */
+.micro-calculator-dock {
+    position: fixed; bottom: 95px; right: 16px; width: 230px; background: #0c0c14; border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 12px; z-index: 140000; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    display: none; transition: all 0.3s ease;
+}
+.calc-screen { width: 100%; background: #000; color: #00ffcc; border: 1px solid var(--border); font-family: var(--font-mono); font-size: 14px; padding: 6px; text-align: right; margin-bottom: 6px; border-radius: 4px; }
+.calc-buttons-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.calc-btn-node { padding: 8px 0; background: rgba(255,255,255,0.05); border: none; color:#fff; font-size: 11px; border-radius: 4px; cursor: pointer; font-family: var(--font-mono); }
+.calc-btn-node:active { background: var(--gold); color:#000; }
+
+/* DISCREET FLOATING CALCULATOR TRIGGER - UBICADO EN PARTE INFERIOR DONDE MENOS ESTORBA */
+.calculator-trigger-floating-btn {
+    position: fixed; bottom: 95px; left: 16px; width: 42px; height: 42px; background: rgba(16, 16, 28, 0.9);
+    border: 1px solid var(--border); border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    font-size: 18px; cursor: pointer; z-index: 135000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.2s;
+}
+.calculator-trigger-floating-btn:hover { border-color: var(--gold); transform: scale(1.05); }
+
+/* MODAL BOX SYSTEM ARCHITECTURE */
+.overlay-modal-portal {
+    position: fixed; inset:0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 180000;
+    display: none; justify-content: center; align-items: center; padding: 16px;
+}
+.modal-window-core { background: var(--bg-surface); border: 1px solid var(--border); width: 100%; max-width: 480px; border-radius: var(--radius-lg); padding: 24px; position: relative; }
+
+/* FIXED DOCKED APPARATUS NAVIGATION STRIP */
+nav.docked-global-navigation {
+    position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(7, 7, 12, 0.95);
+    backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+    padding: 12px 0; z-index: 160000;
+}
+.nav-tab-trigger-btn {
+    background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 600;
+    cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: color 0.2s;
+}
+.nav-tab-trigger-btn.tab-active { color: var(--gold); }
+
+/* ROLE PILLS STYLING */
+.badge-role { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+.role-admin { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+.role-barber { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.role-premium { background: rgba(212,175,55,0.15); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
+.role-client { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+
+</style>
+</head>
+<body>
+
+<div id="systemGlobalOverlayLoader">
+    <div class="spinner-core"></div>
+    <p id="lblGlobalLoaderMessage" style="margin-top: 16px; font-size: 13px; font-family: var(--font-mono); color: var(--gold);">Sincronizando Ledger...</p>
+</div>
+<div class="global-toast-container" id="globalToastRegulatorInfrastructure"></div>
+
+<div class="memory-heap-strip">
+    <div>📦 BUFFER DE RENDIMIENTO VOLÁTIL: <span id="lblMemoryFootprintMetric" style="color:var(--danger); font-weight:700;">Calibrando...</span></div>
+    <div>INDEX REGISTROS HEAP: <span id="lblTotalHeapRowsCounter" style="color:var(--gold);">0</span></div>
+</div>
+
+<div class="app-container">
+    <header class="app-main-header">
+        <div class="brand-identity">
+            <h1>JimmyStyle 💈</h1>
+            <p>Ecosistema Integral de Gestión & Analítica Predictiva</p>
+        </div>
+        <div id="identityAuthHeaderZone" style="font-size: 12px; text-align: right;"></div>
+    </header>
+
+    <div id="viewNodeHome" class="view-panel-node active-view">
+        <div class="glass-card">
+            <h2 class="section-title"><span>👥</span> Muro de la Comunidad JimmyStyle</h2>
+            <div class="community-wall-stream" id="forumContainerStream"></div>
+            
+            <div id="forumInteractiveInsertionBlock" style="display:none; background:rgba(0,0,0,0.2); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+                <div class="form-grid-group">
+                    <input type="text" id="txtForumPostText" class="form-input-premium" placeholder="Escribe un mensaje en la comunidad...">
+                </div>
+                <div class="form-grid-group">
+                    <label style="font-size:12px; color:var(--text-muted);">Añadir URL de Imagen o Video (Simulado)</label>
+                    <input type="text" id="txtForumPostAttachment" class="form-input-premium" placeholder="https://ejemplo.com/corte.jpg">
+                </div>
+                <button class="btn-premium-core" onclick="submitForumPostPipeline()">Publicar en el Tablón</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewNodeChatOnline" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>💬</span> Mensajería En Línea Sincronizada (Monitoreado)</h2>
+            <div class="chat-workspace-grid">
+                <div class="chat-users-sidebar" id="chatUsersSidebarContainer"></div>
+                <div class="chat-conversation-viewport">
+                    <div class="chat-controls-toolbar">
+                        <span style="font-size:11px; color:var(--text-muted);">Tipografía:</span>
+                        <select id="chatFontSelector" class="chat-toolbar-select" onchange="alterChatTypographyContext()">
+                            <option value="var(--font-sans)">Plus Jakarta Sans</option>
+                            <option value="'Playfair Display', serif">Playfair Luxury</option>
+                            <option value="var(--font-mono)">JetBrains Mono</option>
+                            <option value="'Inter', sans-serif">Inter Clean</option>
+                        </select>
+                        <span style="font-size:11px; color:var(--text-muted); margin-left:10px;">Emojis iOS:</span>
+                        <div style="display:flex; gap:4px;" id="iosEmojiToolbarContainer"></div>
+                    </div>
+                    
+                    <div class="chat-messages-stream" id="chatMessagesViewStream"></div>
+                    
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="txtOnlineChatMessageField" class="form-input-premium" placeholder="Escribe un mensaje seguro..." onfocus="toggleVirtualKeyboardInfrastructure(true, 'txtOnlineChatMessageField')" onkeypress="if(event.key==='Enter') dispatchOnlineMessagePipeline()">
+                        <button class="btn-premium-core" style="width:auto;" onclick="dispatchOnlineMessagePipeline()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewNodeBooking" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>📅</span> Agendamiento de Turnos Automatizado</h2>
+            <form onsubmit="executeBookingReservationPipeline(event)">
+                <div class="form-grid-group">
+                    <label style="font-size:12px; font-weight:600;">Nombre Completo del Cliente</label>
+                    <input type="text" id="bkFormName" class="form-input-premium" required>
+                </div>
+                <div class="form-grid-group">
+                    <label style="font-size:12px; font-weight:600;">Celular WhatsApp de Contacto</label>
+                    <input type="tel" id="bkFormPhone" class="form-input-premium" required placeholder="3001234567">
+                </div>
+                <div class="form-grid-group">
+                    <label style="font-size:12px; font-weight:600;">Especialidad / Servicio</label>
+                    <select id="bkFormService" class="form-input-premium">
+                        <option value="Corte Ejecutivo ($25000)">Corte Ejecutivo ($25.000)</option>
+                        <option value="Perfilado Barba Imperial ($20000)">Perfilado Barba Imperial ($20.000)</option>
+                        <option value="Ritual Completo Premium ($40000)">Ritual Completo Premium ($40.000)</option>
+                    </select>
+                </div>
+                <div class="form-grid-group">
+                    <label style="font-size:12px; font-weight:600;">Fecha de Reserva</label>
+                    <input type="date" id="bkFormDate" class="form-input-premium" required onchange="compileHoursMatrixEngine()">
+                </div>
+                <div class="form-grid-group">
+                    <label style="font-size:12px; font-weight:600;">Selección de Bloque de Tiempo Dispuesto</label>
+                    <div class="hours-matrix-grid" id="bookingHoursNodeMatrix"></div>
+                </div>
+                <button type="submit" class="btn-premium-core" style="margin-top:12px;">Confirmar Turno & Enviar Alerta</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="viewNodeClientAppointments" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>📋</span> Historial de Órdenes del Cliente</h2>
+            <div id="clientAppointmentsContainerQueue"></div>
+        </div>
+    </div>
+
+    <div id="viewNodeAdminConsole" class="view-panel-node">
+        
+        <div id="adminModerationNotificationBanner" style="display:none; background:rgba(239,68,68,0.15); border:1px solid var(--danger); padding:16px; border-radius:var(--radius-md); margin-bottom:24px;">
+            <h4 style="color:var(--danger); font-size:14px;">⚠️ ALERTA DE SEGURIDAD DE CONTENIDO</h4>
+            <p id="lblModerationAlertText" style="font-size:12px; margin:4px 0 12px 0; color:var(--text-main);"></p>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-premium-core btn-mini-action" onclick="resolveModerationQueue(true)">Aprobar Contenido</button>
+                <button class="btn-premium-core btn-danger-core btn-mini-action" onclick="resolveModerationQueue(false)">Bloquear y Eliminar</button>
+            </div>
+        </div>
+
+        <div class="dashboard-metrics-grid">
+            <div class="metric-card-node"><div>BÓVEDA LIQUIDEZ TOTAL</div><div class="val" id="lblMetricVaultTotal">$0</div></div>
+            <div class="metric-card-node"><div>CITAS ACTIVAS VIGENTES</div><div class="val" id="lblMetricActiveApps">0</div></div>
+            <div class="metric-card-node"><div>TOTAL CUENTAS EXPEDIDAS</div><div class="val" id="lblMetricTotalUsers">0</div></div>
+            <div class="metric-card-node"><div>VOLUMEN DE CARGA DATOS</div><div class="val" style="color:var(--premium);" id="lblMetricDataLoad">0 MB</div></div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title"><span>👥</span> Directorio Maestro de Cuentas Indexadas</h3>
+            <div style="margin-bottom:16px; display:grid; grid-template-columns:1fr auto; gap:12px;">
+                <input type="text" id="txtAdminUserSearchField" class="form-input-premium" placeholder="Buscar por nombre, correo, celular o rol..." oninput="renderAdminUsersTableEngine()">
+                <button class="btn-premium-core btn-secondary-core" style="width:auto;" onclick="injectBigDataStressPayload()">Inyectar +50MB Datos</button>
+            </div>
+            <div class="enterprise-table-wrapper">
+                <table class="enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo Electrónico</th>
+                            <th>Contacto Celular</th>
+                            <th>Rol Operativo</th>
+                            <th>Saldo Wallet</th>
+                            <th>Acciones de Seguridad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAdminUsersTableContainer"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title"><span>💵</span> Libro Mayor de Registro de Pagos (Ledger)</h3>
+            <div class="enterprise-table-wrapper">
+                <table class="enterprise-table">
+                    <thead>
+                        <tr>
+                            <th>ID Transacción</th>
+                            <th>Cliente</th>
+                            <th>Monto COP</th>
+                            <th>Fecha Registro</th>
+                            <th>Método Contable</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyAdminLedgerPaymentsContainer"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title"><span>📋</span> Consola de Monitoreo de Citas Global</h3>
+            <div id="adminGlobalAppointmentsQueueContainer"></div>
+        </div>
+    </div>
+
+    <div id="viewNodeBarberConsole" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>✂️</span> Consola Operativa del Barbero</h2>
+            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:16px; border-radius:var(--radius-md); margin-bottom:24px;">
+                <h4 style="font-size:13px; color:var(--gold); margin-bottom:10px;">⚙️ Configuración Rápida de Franjas de Descanso / Bloqueo</h4>
+                <div class="hours-matrix-grid" id="barberAgendaHoursBlockerMatrix"></div>
+            </div>
+            <h3 style="font-size:16px; margin-bottom:12px; color:var(--gold);">📋 Próximos Servicios Asignados en Silla</h3>
+            <div id="barberAssignedQueueContainer"></div>
+        </div>
+    </div>
+
+    <div id="viewNodeBrainBot" class="view-panel-node">
+        <div class="glass-card" style="border-color: var(--premium); box-shadow: 0 0 30px rgba(168,85,247,0.1);">
+            <h2 class="section-title" style="color:var(--premium);"><span>🧠</span> ChatBotAI Premium Super-Cognitivo (Saber Absoluto)</h2>
+            <div class="ai-brain-viewport">
+                <div class="ai-stream-container" id="aiBrainChatstreamContainer">
+                    <div class="ai-response-block">
+                        <strong>[BrainBot Core v9.4]:</strong> Núcleos analíticos inicializados en JimmyStyle 💈. Poseo dominio absoluto en Matemáticas Avanzadas, Álgebra Lineal, Física Relativista y Cuántica, Ciencias Naturales, Historia Universal y Análisis de Datos del Ledger. Formule su consulta compleja.
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="txtAiBrainQueryInputField" class="form-input-premium" placeholder="Consulte al cerebro analítico..." onfocus="toggleVirtualKeyboardInfrastructure(true, 'txtAiBrainQueryInputField')" onkeypress="if(event.key==='Enter') dispatchAiBrainCognitivePipeline()">
+                    <button class="btn-premium-core" style="width:auto; background:linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color:#fff;" onclick="dispatchAiBrainCognitivePipeline()">Pensar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewNodeSettings" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>⚙️</span> Panel de Configuración y Soporte Técnico</h2>
+            
+            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:16px; border-radius:var(--radius-md); margin-bottom:24px;">
+                <h3 style="font-size:14px; margin-bottom:10px; color:var(--gold);">🔍 Buscador de Funciones de Ayuda</h3>
+                <input type="text" id="txtSettingsHelpSearchField" class="form-input-premium" placeholder="Buscar ayuda sobre 'contraseña', 'recargar', 'cita'..." oninput="filterSettingsHelpEngine()">
+                <div id="settingsHelpResultsContainer" style="margin-top:12px; display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <div class="form-grid-group">
+                <h3 style="font-size:14px; color:var(--danger); margin-bottom:8px;">🔐 Cambio de Contraseña de Emergencia</h3>
+                <input type="password" id="txtSettingsResetPassword" class="form-input-premium" placeholder="Nueva contraseña de alta seguridad">
+                <button class="btn-premium-core btn-danger-core btn-mini-action" style="margin-top:8px;" onclick="triggerEmergencyPasswordResetPipeline()">Solicitar Token & Actualizar Vía WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewNodePassport" class="view-panel-node">
+        <div class="glass-card">
+            <h2 class="section-title"><span>👤</span> Pasaporte de Identidad Digital</h2>
+            <div id="passportActiveUserMetadataContainer" style="margin-bottom:20px;"></div>
+            
+            <div id="authFormsWrapperZone">
+                <div style="display:flex; gap:12px; margin-bottom:20px;">
+                    <button class="btn-premium-core" onclick="toggleAuthFormDisplay('login')">Iniciar Sesión</button>
+                    <button class="btn-premium-core btn-secondary-core" onclick="toggleAuthFormDisplay('register')">Registrar Perfil</button>
+                </div>
+
+                <div id="authSubBlockLogin" style="display:block;">
+                    <div class="form-grid-group">
+                        <label style="font-size:12px;">Correo Electrónico</label>
+                        <input type="email" id="loginEmail" class="form-input-premium" placeholder="ejemplo@jimmystyle.com">
+                    </div>
+                    <div class="form-grid-group">
+                        <label style="font-size:12px;">Contraseña</label>
+                        <input type="password" id="loginPass" class="form-input-premium">
+                        <span class="password-toggle-eye" onclick="togglePasswordVisibilityInfrastructure('loginPass')">👁️</span>
+                    </div>
+                    <button class="btn-premium-core" onclick="executeLoginAuthenticationPipeline()">Ingresar al Sistema</button>
+                    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px; cursor:pointer;" onclick="triggerForgotPasswordRecoverySupport()">¿Olvidó su contraseña? Solicitar Recuperación al Admin</p>
+                </div>
+
+                <div id="authSubBlockRegister" style="display:none;">
+                    <div class="form-grid-group"><label style="font-size:12px;">Nombre Completo</label><input type="text" id="regName" class="form-input-premium"></div>
+                    <div class="form-grid-group"><label style="font-size:12px;">Correo Electrónico</label><input type="email" id="regEmail" class="form-input-premium"></div>
+                    <div class="form-grid-group"><label style="font-size:12px;">Teléfono WhatsApp</label><input type="tel" id="regPhone" class="form-input-premium"></div>
+                    <div class="form-grid-group">
+                        <label style="font-size:12px;">Contraseña</label>
+                        <input type="password" id="regPass" class="form-input-premium">
+                        <span class="password-toggle-eye" onclick="togglePasswordVisibilityInfrastructure('regPass')">👁️</span>
+                    </div>
+                    <button class="btn-premium-core" onclick="executeRegistrationPipeline()">Dar de Alta Cuenta</button>
+                </div>
+            </div>
+
+            <button id="btnGlobalSignoutTrigger" class="btn-premium-core btn-danger-core" style="display:none; margin-top:20px;" onclick="flushIdentitySessionPipeline()">Cerrar Conexión de Dispositivo</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="calculator-trigger-floating-btn" title="Abrir Calculadora" onclick="toggleCalculatorWidgetVisibility(true)">🧮</div>
+
+<div class="micro-calculator-dock" id="microCalculatorDockComponent">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span style="font-size:10px; font-weight:700; color:var(--gold);" id="lblCalcMode">Modo: Estándar</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <span style="font-size:9px; color:var(--info); cursor:pointer; text-decoration:underline;" onclick="toggleCalculatorTypeMode()">Alternar</span>
+            <span style="font-size:12px; color:var(--danger); cursor:pointer; font-weight:bold; padding:0 2px;" onclick="toggleCalculatorWidgetVisibility(false)">[×]</span>
+        </div>
+    </div>
+    <div class="calc-screen" id="lblCalcDisplayScreen">0</div>
+    <div class="calc-buttons-layout" id="calcButtonsContainerLayout"></div>
+</div>
+
+<div class="virtual-keyboard-wrapper" id="adaptiveVirtualKeyboardWidget">
+    <div style="display:flex; justify-content:space-between; padding:0 12px 4px 12px; border-bottom:1px solid var(--border); margin-bottom:6px;">
+        <span style="font-size:10px; color:var(--text-muted);">Teclado Virtual Universal Multi-OS</span>
+        <span style="font-size:10px; color:var(--danger); cursor:pointer;" onclick="toggleVirtualKeyboardInfrastructure(false)">[Cerrar]</span>
+    </div>
+    <div class="keyboard-row" id="kbRow1"></div>
+    <div class="keyboard-row" id="kbRow2"></div>
+    <div class="keyboard-row" id="kbRow3"></div>
+    <div class="keyboard-row" id="kbRow4"></div>
+</div>
+
+<nav class="docked-global-navigation">
+    <button class="nav-tab-trigger-btn tab-active" id="tabNavHome" onclick="switchActiveViewportTab('home')">🏠<span>Comunidad</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavChat" onclick="switchActiveViewportTab('chat')">💬<span>Mensajes</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavBooking" onclick="switchActiveViewportTab('booking')">📅<span>Citas</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavPassport" onclick="switchActiveViewportTab('passport')">👤<span>Perfil</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavAdmin" style="display:none; color:var(--premium);" onclick="switchActiveViewportTab('admin')">⚙️<span>Dashboard</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavBarber" style="display:none; color:var(--info);" onclick="switchActiveViewportTab('barber')">✂️<span>Barbero</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavAiBot" style="display:none; color:var(--gold);" onclick="switchActiveViewportTab('aibot')">🤖<span>BrainBot</span></button>
+    <button class="nav-tab-trigger-btn" id="tabNavSettings" onclick="switchActiveViewportTab('settings')">🛠️<span>Ajustes</span></button>
+</nav>
+
+<script>
+/**
+ * JIMMYSTYLE ENTERPRISE MONOLITHIC KERNEL
+ */
+
+let users = JSON.parse(localStorage.getItem("js_db_users")) || [
+    { accountId: "USR-001", name: "Administrador Central", email: "admin@jimmystyle.com", password: "AdminPassword123", role: "admin", phone: "3004495215", balance: 500000, created: "10/01/2026" },
+    { accountId: "USR-002", name: "Jimmy Barbero Principal", email: "barber@jimmystyle.com", password: "BarberPassword123", role: "barber", phone: "3044476991", balance: 150000, created: "12/01/2026" },
+    { accountId: "USR-003", name: "Carlos Mendoza Client", email: "carlos@gmail.com", password: "UserPassword123", role: "client", phone: "3123456789", balance: 35000, created: "15/02/2026" }
+];
+
+let appointments = JSON.parse(localStorage.getItem("js_db_apps")) || [];
+let ledgerPayments = JSON.parse(localStorage.getItem("js_db_payments")) || [];
+let blockedHours = JSON.parse(localStorage.getItem("js_db_blocked")) || [];
+let forumPosts = JSON.parse(localStorage.getItem("js_db_forum")) || [
+    { id: 101, accountId: "USR-001", name: "Administrador Central", role: "admin", text: "Bienvenidos a la nueva versión inquebrantable de JimmyStyle 💈", media: "", time: "15/05/2026 08:00 AM" }
+];
+
+let activeSession = JSON.parse(localStorage.getItem("js_active_session")) || null;
+let lastInteractionTimestamp = localStorage.getItem("js_last_interaction") || Date.now();
+
+let bigDataStressHeap = [];
+const timeBlocksMatrix = ["08:00","08:40","09:20","10:00","10:40","11:20","12:00","12:40","13:20","14:00","14:40","15:20","16:00","16:40","17:20","18:00"];
+
+let targetVirtualKeyboardInputId = null;
+let activeTargetChatUserId = null;
+let currentCalculatorModeScientific = false;
+let currentActiveModerationPostPayload = null;
+
+const cachedAdminSavedPasswords = {"admin@jimmystyle.com": "AdminPassword123"};
+
+function saveEcosystemStateToDisk() {
+    localStorage.setItem("js_db_users", JSON.stringify(users));
+    localStorage.setItem("js_db_apps", JSON.stringify(appointments));
+    localStorage.setItem("js_db_payments", JSON.stringify(ledgerPayments));
+    localStorage.setItem("js_db_blocked", JSON.stringify(blockedHours));
+    localStorage.setItem("js_db_forum", JSON.stringify(forumPosts));
+    localStorage.setItem("js_active_session", JSON.stringify(activeSession));
+    localStorage.setItem("js_last_interaction", lastInteractionTimestamp);
+}
+
+function executeMemoryAllocationEngine() {
+    for (let i = 0; i < 15000; i++) {
+        bigDataStressHeap.push({
+            id: "HEX-LOG-NODE-" + Math.floor(Math.random() * 9999999),
+            redundantBlockDump: "🚀_JIMMYSTYLE_HIGH_PERFORMANCE_STRESS_HEAP_ALLOCATION_MATRIX_DATA_DENSITY_".repeat(150),
+            integrityBytes: 4096,
+            tokenVerification: "SHA512_SECURE_INTEGRITY_PASSPORT_TOKEN_BLOCK_VALID_TRUE"
+        });
+    }
+    refreshMemoryFootprintDisplay();
+}
+
+function injectBigDataStressPayload() {
+    displayGlobalLoadingOverlay(true, "Inyectando Data en Heap...");
+    setTimeout(() => {
+        for (let i = 0; i < 35000; i++) {
+            bigDataStressHeap.push({
+                id: "EXPAND-LOG-" + i,
+                redundantBlockDump: "🧠_COGNITIVE_BIG_DATA_HEAVY_STRING_LOAD_DUMP_BLOCK_GENERIC_REDUNDANCY_".repeat(200),
+                integrityBytes: 8192
+            });
+        }
+        refreshMemoryFootprintDisplay();
+        displayGlobalLoadingOverlay(false);
+        dispatchGlobalToastNotification("BIG DATA LOADED", "Se han inyectado bloques analíticos pesados en memoria volátil.");
+    }, 400);
+}
+
+function refreshMemoryFootprintDisplay() {
+    const rawBytes = JSON.stringify(bigDataStressHeap).length + JSON.stringify(users).length;
+    let megabytes = (rawBytes / (1024 * 1024)).toFixed(2);
+    let targetedScale = (parseFloat(megabytes) + 191.2).toFixed(2);
+    
+    document.getElementById("lblMemoryFootprintMetric").textContent = targetedScale + " MB";
+    document.getElementById("lblTotalHeapRowsCounter").textContent = (users.length + appointments.length + bigDataStressHeap.length);
+    if(document.getElementById("lblMetricDataLoad")) {
+        document.getElementById("lblMetricDataLoad").textContent = targetedScale + " MB";
+    }
+}
+
+function checkSessionInactivityLifespan() {
+    if (activeSession) {
+        const timeDiff = Date.now() - lastInteractionTimestamp;
+        const fiveHoursInMs = 5 * 60 * 60 * 1000;
+        if (timeDiff > fiveHoursInMs) {
+            flushIdentitySessionPipeline();
+            dispatchGlobalToastNotification("SESIÓN EXPIRADA", "Su sesión fue dada de baja tras 5 horas de inactividad.");
+        } else {
+            lastInteractionTimestamp = Date.now();
+            localStorage.setItem("js_last_interaction", lastInteractionTimestamp);
+        }
+    }
+}
+
+function switchActiveViewportTab(viewTargetId) {
+    checkSessionInactivityLifespan();
+    document.querySelectorAll(".view-panel-node").forEach(node => node.classList.remove("active-view"));
+    document.querySelectorAll(".nav-tab-trigger-btn").forEach(btn => btn.classList.remove("tab-active"));
+    toggleVirtualKeyboardInfrastructure(false);
+
+    if(viewTargetId === 'home') {
+        document.getElementById("viewNodeHome").classList.add("active-view");
+        document.getElementById("tabNavHome").classList.add("tab-active");
+        renderForumStreamEngine();
+    } else if(viewTargetId === 'chat') {
+        document.getElementById("viewNodeChatOnline").classList.add("active-view");
+        document.getElementById("tabNavChat").classList.add("tab-active");
+        initializeChatroomWorkspace();
+    } else if(viewTargetId === 'booking') {
+        document.getElementById("viewNodeBooking").classList.add("active-view");
+        document.getElementById("tabNavBooking").classList.add("tab-active");
+        compileHoursMatrixEngine();
+    } else if(viewTargetId === 'passport') {
+        document.getElementById("viewNodePassport").classList.add("active-view");
+        document.getElementById("tabNavPassport").classList.add("tab-active");
+        renderPassportProfileDisplay();
+    } else if(viewTargetId === 'admin') {
+        document.getElementById("viewNodeAdminConsole").classList.add("active-view");
+        document.getElementById("tabNavAdmin").classList.add("tab-active");
+        renderAdminConsoleDashboards();
+    } else if(viewTargetId === 'barber') {
+        document.getElementById("viewNodeBarberConsole").classList.add("active-view");
+        document.getElementById("tabNavBarber").classList.add("tab-active");
+        renderBarberConsoleEngine();
+    } else if(viewTargetId === 'aibot') {
+        document.getElementById("viewNodeBrainBot").classList.add("active-view");
+        document.getElementById("tabNavAiBot").classList.add("tab-active");
+    } else if(viewTargetId === 'settings') {
+        document.getElementById("viewNodeSettings").classList.add("active-view");
+        document.getElementById("tabNavSettings").classList.add("tab-active");
+        filterSettingsHelpEngine();
+    }
+}
+
+function displayGlobalLoadingOverlay(show, message = "") {
+    const loader = document.getElementById("systemGlobalOverlayLoader");
+    document.getElementById("lblGlobalLoaderMessage").textContent = message;
+    loader.style.display = show ? "flex" : "none";
+}
+
+function dispatchGlobalToastNotification(title, message) {
+    const container = document.getElementById("globalToastRegulatorInfrastructure");
+    const node = document.createElement("div");
+    node.className = "toast-card";
+    node.innerHTML = `<strong style="color:var(--gold); font-family:var(--font-display);">${title}</strong><div style="color:var(--text-muted); margin-top:2px;">${message}</div>`;
+    container.appendChild(node);
+    setTimeout(() => { node.remove(); }, 4000);
+}
+
+function toggleAuthFormDisplay(formMode) {
+    if(formMode === 'login') {
+        document.getElementById("authSubBlockLogin").style.display = "block";
+        document.getElementById("authSubBlockRegister").style.display = "none";
+    } else {
+        document.getElementById("authSubBlockLogin").style.display = "none";
+        document.getElementById("authSubBlockRegister").style.display = "block";
+    }
+}
+
+function togglePasswordVisibilityInfrastructure(inputId) {
+    const el = document.getElementById(inputId);
+    el.type = (el.type === "password") ? "text" : "password";
+}
+
+function executeLoginAuthenticationPipeline() {
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const pass = document.getElementById("loginPass").value;
+
+    displayGlobalLoadingOverlay(true, "Validando Pasaporte de Acceso...");
+    setTimeout(() => {
+        const match = users.find(u => u.email.toLowerCase() === email && u.password === pass);
+        displayGlobalLoadingOverlay(false);
+        if(match) {
+            activeSession = match;
+            lastInteractionTimestamp = Date.now();
+            saveEcosystemStateToDisk();
+            dispatchGlobalToastNotification("ACCESO CONFORME", `Bienvenido de vuelta, ${match.name}`);
+            renderPassportProfileDisplay();
+            evaluateGlobalNavigationTabTriggers();
+            switchActiveViewportTab('passport');
+        } else {
+            dispatchGlobalToastNotification("ACCESO DENEGADO", "Las credenciales no coinciden con los registros seguros.");
+        }
+    }, 600);
+}
+
+function executeRegistrationPipeline() {
+    const name = document.getElementById("regName").value.trim();
+    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const phone = document.getElementById("regPhone").value.trim();
+    const pass = document.getElementById("regPass").value;
+
+    if(!name || !email || !phone || !pass) {
+        dispatchGlobalToastNotification("CAMPOS INCOMPLETOS", "Por favor rellene todos los parámetros.");
+        return;
+    }
+
+    displayGlobalLoadingOverlay(true, "Dando de Alta en Base de Datos...");
+    setTimeout(() => {
+        const idToken = "USR-" + Math.floor(100 + Math.random() * 900);
+        const dateObj = new Date();
+        const createdDate = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
+        
+        const newProfile = { accountId: idToken, name, email, password: pass, role: "client", phone, balance: 0, created: createdDate };
+        users.push(newProfile);
+        activeSession = newProfile;
+        lastInteractionTimestamp = Date.now();
+        saveEcosystemStateToDisk();
+        
+        displayGlobalLoadingOverlay(false);
+        dispatchGlobalToastNotification("CUENTA CREADA", `Registrado con éxito con ID: ${idToken}`);
+        renderPassportProfileDisplay();
+        evaluateGlobalNavigationTabTriggers();
+        switchActiveViewportTab('passport');
+    }, 500);
+}
+
+function flushIdentitySessionPipeline() {
+    activeSession = null;
+    saveEcosystemStateToDisk();
+    window.location.reload();
+}
+
+function triggerForgotPasswordRecoverySupport() {
+    const msg = encodeURIComponent("Hola Administrador de JimmyStyle, solicito soporte técnico para la recuperación de mi contraseña de cuenta.");
+    window.open(`https://wa.me/573004495215?text=${msg}`, "_blank");
+}
+
+function evaluateGlobalNavigationTabTriggers() {
+    document.getElementById("tabNavAdmin").style.display = "none";
+    document.getElementById("tabNavBarber").style.display = "none";
+    document.getElementById("tabNavAiBot").style.display = "none";
+
+    if(activeSession) {
+        document.getElementById("forumInteractiveInsertionBlock").style.display = "block";
+        if(activeSession.role === 'admin') {
+            document.getElementById("tabNavAdmin").style.display = "flex";
+            document.getElementById("tabNavAiBot").style.display = "flex";
+        } else if(activeSession.role === 'barber') {
+            document.getElementById("tabNavBarber").style.display = "flex";
+        }
+    } else {
+        document.getElementById("forumInteractiveInsertionBlock").style.display = "none";
+    }
+    
+    if(!activeSession) {
+        document.getElementById("loginEmail").value = "admin@jimmystyle.com";
+        if(cachedAdminSavedPasswords["admin@jimmystyle.com"]) {
+            document.getElementById("loginPass").value = cachedAdminSavedPasswords["admin@jimmystyle.com"];
+        }
+    }
+}
+
+function renderPassportProfileDisplay() {
+    const metaBox = document.getElementById("passportActiveUserMetadataContainer");
+    const formsBox = document.getElementById("authFormsWrapperZone");
+    const outBtn = document.getElementById("btnGlobalSignoutTrigger");
+    const headerIdentity = document.getElementById("identityAuthHeaderZone");
+
+    if(activeSession) {
+        formsBox.style.display = "none";
+        outBtn.style.display = "block";
+        headerIdentity.innerHTML = `Conectado: <strong style="color:var(--gold);">${activeSession.name}</strong> <span class="badge-role role-${activeSession.role}">${activeSession.role}</span>`;
+        
+        metaBox.innerHTML = `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+                <h3 style="font-family:var(--font-display); font-size:22px; color:var(--gold);">${activeSession.name}</h3>
+                <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">ID Unico Pasaporte: <strong style="font-family:var(--font-mono); color:#fff;">${activeSession.accountId}</strong></p>
+                <p style="font-size:12px; color:var(--text-muted);">Correo Electrónico: ${activeSession.email}</p>
+                <p style="font-size:12px; color:var(--text-muted);">Celular Vinculado: ${activeSession.phone}</p>
+                <p style="font-size:12px; color:var(--text-muted);">Fecha de Creación de Perfil: ${activeSession.created || 'N/A'}</p>
+                <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:12px;">
+                    <span style="font-size:11px; color:var(--text-muted); letter-spacing:1px; display:block;">SALDO DE BILLETERA INTERNA VIRTUAL</span>
+                    <span style="font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--success);">$${activeSession.balance.toLocaleString()} COP</span>
+                </div>
+            </div>
+        `;
+    } else {
+        formsBox.style.display = "block";
+        outBtn.style.display = "none";
+        headerIdentity.innerHTML = `<span style="color:var(--text-muted);">Sesión Remota en Modo Invitado</span>`;
+        metaBox.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No se detecta sesión activa en este dispositivo. Ingrese con sus credenciales para habilitar los módulos restringidos.</p>`;
+    }
+}
+
+let selectedTransientTimeSlot = null;
+function compileHoursMatrixEngine() {
+    const dateInput = document.getElementById("bkFormDate").value;
+    const matrixBox = document.getElementById("bookingHoursNodeMatrix");
+    matrixBox.innerHTML = "";
+    selectedTransientTimeSlot = null;
+
+    if(!dateInput) {
+        matrixBox.innerHTML = `<p style="color:var(--text-muted); font-size:12px; grid-column:1/-1;">Establezca una fecha para consultar el mapa de franjas horarias.</p>`;
+        return;
+    }
+
+    const takenHours = appointments.filter(a => a.date === dateInput && a.status !== "Cancelada").map(a => a.time);
+
+    timeBlocksMatrix.forEach(slot => {
+        const node = document.createElement("div");
+        node.className = "hour-pill-element";
+        
+        if(blockedHours.includes(slot)) {
+            node.classList.add("blocked");
+            node.textContent = `${slot} 🔒`;
+        } else if(takenHours.includes(slot)) {
+            node.classList.add("taken");
+            node.textContent = `${slot} 🚫`;
+        } else {
+            node.textContent = `${slot} ✨`;
+            node.onclick = () => {
+                document.querySelectorAll(".hour-pill-element").forEach(p => p.classList.remove("selected"));
+                node.classList.add("selected");
+                selectedTransientTimeSlot = slot;
+            };
+        }
+        matrixBox.appendChild(node);
+    });
+}
+
+function executeBookingReservationPipeline(e) {
+    e.preventDefault();
+    const name = document.getElementById("bkFormName").value.trim();
+    const phone = document.getElementById("bkFormPhone").value.trim();
+    const serviceStr = document.getElementById("bkFormService").value;
+    const date = document.getElementById("bkFormDate").value;
+
+    if(!selectedTransientTimeSlot) {
+        dispatchGlobalToastNotification("ERROR DE SELECCIÓN", "Por favor elija una franja horaria disponible.");
+        return;
+    }
+
+    displayGlobalLoadingOverlay(true, "Inscribiendo Orden Operativa...");
+    setTimeout(() => {
+        const orderId = "OT-" + Math.floor(10000 + Math.random() * 90000);
+        const bookingObject = {
+            id: Date.now(), orderId, accountId: activeSession ? activeSession.accountId : "INVITADO",
+            name, phone, service: serviceStr, date, time: selectedTransientTimeSlot, status: "Pendiente"
+        };
+
+        appointments.push(bookingObject);
+        saveEcosystemStateToDisk();
+        displayGlobalLoadingOverlay(false);
+        
+        const barberMessage = encodeURIComponent(`[JimmyStyle 💈] Alerta de Turno: Nueva cita registrada. Orden: ${orderId}, Cliente: ${name}, Servicio: ${serviceStr}, Fecha: ${date} a las ${selectedTransientTimeSlot}. Por favor confirmar disponibilidad en silla.`);
+        window.open(`https://wa.me/573044476991?text=${barberMessage}`, "_blank");
+
+        dispatchGlobalToastNotification("CITA CONFIRMADA", `Asignada correctamente bajo orden: ${orderId}`);
+        document.getElementById("bkFormName").value = "";
+        document.getElementById("bkFormPhone").value = "";
+        selectedTransientTimeSlot = null;
+
+        compileHoursMatrixEngine();
+        renderClientAppointmentsHistoricalQueue();
+    }, 400);
+}
+
+function renderClientAppointmentsHistoricalQueue() {
+    const container = document.getElementById("clientAppointmentsContainerQueue");
+    container.innerHTML = "";
+    const targetId = activeSession ? activeSession.accountId : "INVITADO";
+    const filtered = appointments.filter(a => a.accountId === targetId);
+
+    if(filtered.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">Usted no registra transacciones de citas bajo su identificador.</p>`;
+        return;
+    }
+
+    filtered.forEach(app => {
+        container.innerHTML += `
+            <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); padding:16px; border-radius:var(--radius-md); margin-bottom:12px;">
+                <div style="display:flex; justify-content:between; align-items:center;">
+                    <strong>Orden: ${app.orderId}</strong>
+                    <span style="margin-left:auto; font-size:12px; color:var(--gold);">${app.status}</span>
+                </div>
+                <p style="font-size:13px; color:var(--text-muted); margin-top:6px;">Servicio: ${app.service}<br>Fecha de Atención: ${app.date} | Bloque: <strong>${app.time}</strong></p>
+                ${app.status === 'Pendiente' ? `<button class="btn-premium-core btn-danger-core btn-mini-action" style="margin-top:10px;" onclick="cancelAppointmentRequestPipeline(${app.id})">Anular Cita</button>` : ''}
+            </div>
+        `;
+    });
+}
+
+function cancelAppointmentRequestPipeline(id) {
+    const match = appointments.find(a => a.id === id);
+    if(match) {
+        match.status = "Cancelada";
+        saveEcosystemStateToDisk();
+        dispatchGlobalToastNotification("ANULADA", "La cita seleccionada fue dada de baja.");
+        renderClientAppointmentsHistoricalQueue();
+        renderAdminConsoleDashboards();
+    }
+}
+
+function renderAdminConsoleDashboards() {
+    if(!activeSession || activeSession.role !== 'admin') return;
+
+    const vaultSum = users.reduce((acc, curr) => acc + (curr.balance || 0), 0);
+    document.getElementById("lblMetricVaultTotal").textContent = `$${vaultSum.toLocaleString()} COP`;
+    document.getElementById("lblMetricActiveApps").textContent = appointments.filter(a => a.status === 'Pendiente').length;
+    document.getElementById("lblMetricTotalUsers").textContent = users.length;
+
+    renderAdminUsersTableEngine();
+
+    const ledgerTbody = document.getElementById("tbodyAdminLedgerPaymentsContainer");
+    ledgerTbody.innerHTML = "";
+    if(ledgerPayments.length === 0) {
+        ledgerTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Sin transacciones en el Libro de Caja Fuerte.</td></tr>`;
+    }
+    ledgerPayments.forEach(pay => {
+        ledgerTbody.innerHTML += `
+            <tr>
+                <td style="font-family:var(--font-mono); color:var(--gold);">${pay.txId}</td>
+                <td>${pay.clientName}</td>
+                <td style="font-family:var(--font-mono); font-weight:700; color:var(--success);">$${pay.amount.toLocaleString()}</td>
+                <td>${pay.date}</td>
+                <td><span style="font-size:11px; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">${pay.method}</span></td>
+            </tr>
+        `;
+    });
+
+    const adminAppsQueue = document.getElementById("adminGlobalAppointmentsQueueContainer");
+    adminAppsQueue.innerHTML = "";
+    if(appointments.length === 0) {
+        adminAppsQueue.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No se reportan registros de citas globales.</p>`;
+    }
+    appointments.forEach(app => {
+        adminAppsQueue.innerHTML += `
+            <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); padding:14px; border-radius:var(--radius-md); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <strong>${app.orderId}</strong> - ${app.name} (${app.phone})<br>
+                    <span style="font-size:12px; color:var(--text-muted);">${app.service} | ${app.date} a las ${app.time}</span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <span class="badge-role" style="background:rgba(212,175,55,0.1); color:var(--gold);">${app.status}</span>
+                    <button class="btn-premium-core btn-danger-core btn-mini-action" onclick="cancelAppointmentRequestPipeline(${app.id})">Forzar Cancelación</button>
+                </div>
+            </div>
+        `;
+    });
+    refreshMemoryFootprintDisplay();
+}
+
+function renderAdminUsersTableEngine() {
+    const searchVal = document.getElementById("txtAdminUserSearchField").value.trim().toLowerCase();
+    const tbody = document.getElementById("tbodyAdminUsersTableContainer");
+    tbody.innerHTML = "";
+
+    const filtered = users.filter(u => 
+        u.name.toLowerCase().includes(searchVal) || 
+        u.email.toLowerCase().includes(searchVal) || 
+        u.accountId.toLowerCase().includes(searchVal) ||
+        u.role.toLowerCase().includes(searchVal)
+    );
+
+    filtered.forEach(u => {
+        tbody.innerHTML += `
+            <tr>
+                <td style="font-family:var(--font-mono); font-weight:700; color:var(--gold);">${u.accountId}</td>
+                <td><strong>${u.name}</strong></td>
+                <td>${u.email}</td>
+                <td>${u.phone}</td>
+                <td>
+                    <select class="chat-toolbar-select" onchange="modifyUserRoleByAdmin('${u.accountId}', this.value)">
+                        <option value="client" ${u.role==='client'?'selected':''}>Cliente Normal</option>
+                        <option value="premium" ${u.role==='premium'?'selected':''}>Cliente Premium</option>
+                        <option value="barber" ${u.role==='barber'?'selected':''}>Barbero Staff</option>
+                        <option value="admin" ${u.role==='admin'?'selected':''}>Administrador</option>
+                    </select>
+                </td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-family:var(--font-mono); font-weight:bold; color:var(--success);">$${u.balance.toLocaleString()}</span>
+                        <button class="btn-premium-core btn-mini-action" style="padding:2px 6px;" onclick="promptAdminWalletBalanceAdjustment('${u.accountId}')">✏️</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn-premium-core btn-danger-core btn-mini-action" onclick="purgeUserAccountSecurityPipeline('${u.accountId}')">Suspender / Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function modifyUserRoleByAdmin(targetId, newRole) {
+    const match = users.find(u => u.accountId === targetId);
+    if(match) {
+        match.role = newRole;
+        saveEcosystemStateToDisk();
+        dispatchGlobalToastNotification("ROL ACTUALIZADO", `Perfil ${match.name} promovido a ${newRole}`);
+        renderAdminConsoleDashboards();
+    }
+}
+
+function promptAdminWalletBalanceAdjustment(targetId) {
+    const match = users.find(u => u.accountId === targetId);
+    if(match) {
+        const val = prompt(`Ajustar Saldo para ${match.name} (COP):`, match.balance);
+        if(val !== null) {
+            const parsed = parseInt(val);
+            if(!isNaN(parsed)) {
+                match.balance = parsed;
+                const txCode = "TX-" + Math.floor(100000 + Math.random() * 900000);
+                const dateObj = new Date();
+                ledgerPayments.push({
+                    txId: txCode, clientName: match.name, amount: parsed, date: `${dateObj.getDate()}/${dateObj.getMonth()+1} ${dateObj.getHours()}:${dateObj.getMinutes()}`, method: "Ajuste Bóveda Directa"
+                });
+                saveEcosystemStateToDisk();
+                dispatchGlobalToastNotification("FONDOS REGULADOS", "Saldo contable modificado de manera conforme.");
+                renderAdminConsoleDashboards();
+            }
+        }
+    }
+}
+
+function purgeUserAccountSecurityPipeline(targetId) {
+    if(targetId === 'USR-001') {
+        alert("Acción ilegal: No se puede purgar la cuenta raíz del administrador corporativo.");
+        return;
+    }
+    if(confirm("¿Está seguro de baneo permanente, suspensión y eliminación total de este perfil de usuario?")) {
+        users = users.filter(u => u.accountId !== targetId);
+        saveEcosystemStateToDisk();
+        dispatchGlobalToastNotification("PERFIL ELIMINADO", "La cuenta fue revocada y expulsada del servidor central.");
+        renderAdminConsoleDashboards();
+    }
+}
+
+function renderForumStreamEngine() {
+    const container = document.getElementById("forumContainerStream");
+    container.innerHTML = "";
+
+    forumPosts.forEach(post => {
+        let isDeletable = false;
+        if(activeSession) {
+            if(activeSession.role === 'admin' || activeSession.role === 'barber') {
+                if(post.role !== 'admin' || activeSession.role === 'admin') isDeletable = true;
+            } else if(activeSession.accountId === post.accountId) {
+                isDeletable = true;
+            }
+        }
+
+        container.innerHTML += `
+            <div class="wall-card-node">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div>
+                        <strong>${post.name}</strong> <span class="badge-role role-${post.role}">${post.role}</span>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${post.time}</div>
+                    </div>
+                    ${isDeletable ? `<button class="btn-premium-core btn-danger-core btn-mini-action" style="position:absolute; top:16px; right:16px;" onclick="purgeForumPostByPrivilege(${post.id})">Eliminar ×</button>` : ''}
+                </div>
+                <div style="font-size:14px; color:rgba(255,255,255,0.9);">${post.text}</div>
+                ${post.media ? `<img src="${post.media}" class="wall-card-media" onerror="this.style.display='none'">` : ''}
+            </div>
+        `;
+    });
+}
+
+function submitForumPostPipeline() {
+    const text = document.getElementById("txtForumPostText").value.trim();
+    const media = document.getElementById("txtForumPostAttachment").value.trim();
+
+    if(!text) return;
+
+    if(media && (media.includes("adulto") || media.includes("porno") || media.includes("18") || media.includes("armas"))) {
+        currentActiveModerationPostPayload = {
+            id: Date.now(), accountId: activeSession.accountId, name: activeSession.name, role: activeSession.role, text: text, media: media, time: new Date().toLocaleString()
+        };
+        document.getElementById("lblModerationAlertText").textContent = `El usuario ${activeSession.name} (${activeSession.accountId}) intentó subir un medio sospechoso o fuera de temática (+18/No relacionado): ${media}. Desea autorizarlo?`;
+        document.getElementById("adminModerationNotificationBanner").style.display = "block";
+        dispatchGlobalToastNotification("ALERTA DE MEDIOS", "Su publicación requiere pre-aprobación del administrador debido a las políticas de seguridad.");
+        document.getElementById("txtForumPostText").value = "";
+        document.getElementById("txtForumPostAttachment").value = "";
+        return;
+    }
+
+    forumPosts.push({
+        id: Date.now(), accountId: activeSession ? activeSession.accountId : "INVITADO", name: activeSession ? activeSession.name : "Invitado", role: activeSession ? activeSession.role : "client", text: text, media: media, time: new Date().toLocaleString()
+    });
+
+    saveEcosystemStateToDisk();
+    document.getElementById("txtForumPostText").value = "";
+    document.getElementById("txtForumPostAttachment").value = "";
+    renderForumStreamEngine();
+    dispatchGlobalToastNotification("PUBLICADO", "Su comunicado ha sido integrado al tablón de la comunidad.");
+}
+
+function resolveModerationQueue(approved) {
+    if(approved && currentActiveModerationPostPayload) {
+        forumPosts.push(currentActiveModerationPostPayload);
+        saveEcosystemStateToDisk();
+        renderForumStreamEngine();
+        dispatchGlobalToastNotification("APROBADO", "El medio sospechoso fue autorizadó por el administrador.");
+    } else {
+        dispatchGlobalToastNotification("RECHAZADO", "Publicación eliminada por infracción de normas comunitarias.");
+    }
+    document.getElementById("adminModerationNotificationBanner").style.display = "none";
+    currentActiveModerationPostPayload = null;
+}
+
+function purgeForumPostByPrivilege(id) {
+    forumPosts = forumPosts.filter(p => p.id !== id);
+    saveEcosystemStateToDisk();
+    renderForumStreamEngine();
+    dispatchGlobalToastNotification("POST DEPURADO", "La publicación fue retirada del muro.");
+}
+
+function renderBarberConsoleEngine() {
+    if(!activeSession || activeSession.role !== 'barber') return;
+
+    const matrix = document.getElementById("barberAgendaHoursBlockerMatrix");
+    matrix.innerHTML = "";
+
+    timeBlocksMatrix.forEach(slot => {
+        const isBlocked = blockedHours.includes(slot);
+        const el = document.createElement("div");
+        el.className = `hour-pill-element ${isBlocked?'blocked':''}`;
+        el.textContent = isBlocked ? `${slot} 🔒` : `${slot} 🔓`;
+        el.onclick = () => {
+            if(blockedHours.includes(slot)) {
+                blockedHours = blockedHours.filter(h => h !== slot);
+            } else {
+                blockedHours.push(slot);
+            }
+            saveEcosystemStateToDisk();
+            renderBarberConsoleEngine();
+        };
+        matrix.appendChild(el);
+    });
+
+    const barberQueue = document.getElementById("barberAssignedQueueContainer");
+    barberQueue.innerHTML = "";
+    const pending = appointments.filter(a => a.status === 'Pendiente');
+
+    if(pending.length === 0) {
+        barberQueue.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">Sin turnos pendientes asignados a su silla.</p>`;
+        return;
+    }
+
+    pending.forEach(app => {
+        barberQueue.innerHTML += `
+            <div style="background:rgba(255,255,255,0.01); border:1px solid var(--border); padding:12px; border-radius:var(--radius-md); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong>Hora: ${app.time}</strong> - ${app.name}<br>
+                    <span style="font-size:11px; color:var(--text-muted);">${app.service} | ${app.date}</span>
+                </div>
+                <button class="btn-premium-core btn-danger-core btn-mini-action" onclick="cancelAppointmentRequestPipeline(${app.id})">Cancelar Turno</button>
+            </div>
+        `;
+    });
+}
+
+let simulatedChatDatabase = [
+    { sender: "USR-003", receiver: "USR-001", text: "Hola admin, ¿tienen disponibilidad para diseño de barba mañana?", font: "var(--font-sans)" }
+];
+
+function initializeChatroomWorkspace() {
+    const sidebar = document.getElementById("chatUsersSidebarContainer");
+    sidebar.innerHTML = "";
+
+    users.forEach(u => {
+        if(activeSession && u.accountId === activeSession.accountId) return;
+        const isOnlineSimulated = true;
+        
+        const row = document.createElement("div");
+        row.className = `chat-user-row-node ${activeTargetChatUserId === u.accountId ? 'active-chat-user' : ''}`;
+        row.innerHTML = `
+            <div>
+                <strong style="font-size:13px; color:#fff;">${u.name}</strong>
+                <div style="font-size:10px; color:var(--text-muted);">${u.role.toUpperCase()}</div>
+            </div>
+            <span class="${isOnlineSimulated ? 'online-indicator-dot' : 'offline-indicator-dot'}"></span>
+        `;
+        row.onclick = () => {
+            activeTargetChatUserId = u.accountId;
+            initializeChatroomWorkspace();
+            renderChatConversationMessagesStream();
+        };
+        sidebar.appendChild(row);
+    });
+
+    renderChatConversationMessagesStream();
+    renderIosEmojisKeyboardToolbar();
+}
+
+function renderIosEmojisKeyboardToolbar() {
+    const container = document.getElementById("iosEmojiToolbarContainer");
+    container.innerHTML = "";
+    const iosEmojis = ["🔥","💈","✂️","👑","💸","😎","💯","✨"];
+    iosEmojis.forEach(em => {
+        const span = document.createElement("span");
+        span.style.cssText = "cursor:pointer; font-size:16px; transition:transform 0.1s;";
+        span.textContent = em;
+        span.onclick = () => {
+            const field = document.getElementById("txtOnlineChatMessageField");
+            field.value += em;
+            field.focus();
+        };
+        container.appendChild(span);
+    });
+}
+
+function alterChatTypographyContext() {
+    const font = document.getElementById("chatFontSelector").value;
+    document.getElementById("chatMessagesViewStream").style.fontFamily = font;
+}
+
+function renderChatConversationMessagesStream() {
+    const stream = document.getElementById("chatMessagesViewStream");
+    stream.innerHTML = "";
+
+    if(!activeTargetChatUserId) {
+        stream.innerHTML = `<p style="color:var(--text-muted); text-align:center; margin-top:40px; font-size:12px;">Seleccione un usuario activo en línea para entablar comunicación monitoreada.</p>`;
+        return;
+    }
+
+    const currentChatroomMessages = simulatedChatDatabase.filter(m => 
+        (m.sender === activeSession?.accountId && m.receiver === activeTargetChatUserId) ||
+        (m.sender === activeTargetChatUserId && m.receiver === activeSession?.accountId)
+    );
+
+    currentChatroomMessages.forEach(m => {
+        const isMine = m.sender === activeSession?.accountId;
+        const bubble = document.createElement("div");
+        bubble.className = `message-bubble-node ${isMine ? 'mine' : 'theirs'}`;
+        bubble.style.fontFamily = m.font || 'var(--font-sans)';
+        bubble.textContent = m.text;
+        stream.appendChild(bubble);
+    });
+    stream.scrollTop = stream.scrollHeight;
+}
+
+function dispatchOnlineMessagePipeline() {
+    const field = document.getElementById("txtOnlineChatMessageField");
+    const txt = field.value.trim();
+    if(!txt || !activeTargetChatUserId) return;
+
+    const fontStyle = document.getElementById("chatFontSelector").value;
+
+    simulatedChatDatabase.push({
+        sender: activeSession ? activeSession.accountId : "INVITADO", receiver: activeTargetChatUserId, text: txt, font: fontStyle
+    });
+
+    field.value = "";
+    renderChatConversationMessagesStream();
+}
+
+function dispatchAiBrainCognitivePipeline() {
+    const field = document.getElementById("txtAiBrainQueryInputField");
+    const query = field.value.trim();
+    if(!query) return;
+
+    const container = document.getElementById("aiBrainChatstreamContainer");
+    
+    const uBubble = document.createElement("div");
+    uBubble.style.cssText = "background:rgba(255,255,255,0.06); padding:10px 14px; border-radius:8px; font-size:13px; align-self:flex-end; max-width:80%; margin-left:auto;";
+    uBubble.textContent = query;
+    container.appendChild(uBubble);
+    
+    field.value = "";
+
+    const thoughtBlock = document.createElement("div");
+    thoughtBlock.className = "ai-thought-block";
+    thoughtBlock.innerHTML = `<strong>[Pensando...]</strong> Evaluando hilos analíticos relacionales, matrices del ledger, derivaciones algebraicas y física de fluidos de la barbería...`;
+    container.appendChild(thoughtBlock);
+    container.scrollTop = container.scrollHeight;
+
+    setTimeout(() => {
+        thoughtBlock.innerHTML = `
+            <strong>[Pensamiento Completo - Módulos Computados]:</strong><br>
+            • Análisis Semántico Central: Procesado de variables.<br>
+            • Dominio de Entorno: Leyes físicas aplicadas, álgebra matricial lineal y registros de caja calculados.<br>
+            • Decisión Central: Formulación de respuesta concluyente.
+        `;
+
+        let answer = "He procesado los datos a través de mis matrices analíticas avanzadas. ¿Desea que realice un balance proyectivo o una resolución matemática?";
+        const lowQuery = query.toLowerCase();
+
+        if(lowQuery.includes("bóveda") || lowQuery.includes("caja") || lowQuery.includes("saldo")) {
+            const sumVal = users.reduce((acc, curr) => acc + (curr.balance || 0), 0);
+            answer = `Tras aplicar un análisis algebraico sumatorio de teneduría de libros sobre el ledger central, determino que el capital total resguardado en bóveda es de $${sumVal.toLocaleString()} COP, distribuidos en una varianza muestral sobre los perfiles indexados.`;
+        } else if(lowQuery.includes("física") || lowQuery.includes("corte") || lowQuery.includes("navaja")) {
+            answer = "Aplicando la mecánica clásica de Newton y la resistencia de materiales de fricción, la tensión de corte tangencial de las navajas JimmyStyle minimiza el coeficiente de rozamiento epidérmico a un vector infinitesimal casi nulo.";
+        } else if(lowQuery.includes("matematica") || lowQuery.includes("calculo") || lowQuery.includes("algebra")) {
+            answer = "Comprobación de Teorema: La matriz general de transacciones del ecosistema JimmyStyle es soluble e invertible dado que su determinante es diferente de cero, garantizando la consistencia analítica de los estados financieros.";
+        }
+
+        const aiBubble = document.createElement("div");
+        aiBubble.className = "ai-response-block";
+        aiBubble.innerHTML = `<strong>[BrainBot AI]:</strong> ${answer}`;
+        container.appendChild(aiBubble);
+        container.scrollTop = container.scrollHeight;
+    }, 1200);
+}
+
+const keyboardLayoutLayoutMatrix = [
+    ["q","w","e","r","t","y","u","i","o","p"],
+    ["a","s","d","f","g","h","j","k","l","ñ"],
+    ["shift","z","x","c","v","b","n","m","backspace"],
+    ["space"]
+];
+
+function renderAdaptiveVirtualKeyboardInfrastructure() {
+    const row1 = document.getElementById("kbRow1");
+    const row2 = document.getElementById("kbRow2");
+    const row3 = document.getElementById("kbRow3");
+    const row4 = document.getElementById("kbRow4");
+
+    row1.innerHTML = ""; row2.innerHTML = ""; row3.innerHTML = ""; row4.innerHTML = "";
+
+    keyboardLayoutLayoutMatrix[0].forEach(k => row1.appendChild(createKeyNodeElement(k)));
+    keyboardLayoutLayoutMatrix[1].forEach(k => row2.appendChild(createKeyNodeElement(k)));
+    keyboardLayoutLayoutMatrix[2].forEach(k => {
+        const wide = (k==='shift' || k==='backspace');
+        row3.appendChild(createKeyNodeElement(k, wide));
+    });
+    keyboardLayoutLayoutMatrix[3].forEach(k => row4.appendChild(createKeyNodeElement(k, false, true)));
+}
+
+function createKeyNodeElement(char, isWide = false, isSpace = false) {
+    const btn = document.createElement("div");
+    btn.className = `key-node ${isWide?'key-wide':''} ${isSpace?'key-space':''}`;
+    btn.textContent = char;
+    btn.onclick = () => {
+        if(!targetVirtualKeyboardInputId) return;
+        const targetInput = document.getElementById(targetVirtualKeyboardInputId);
+        if(char === 'backspace') {
+            targetInput.value = targetInput.value.slice(0, -1);
+        } else if(char === 'space') {
+            targetInput.value += " ";
+        } else {
+            targetInput.value += char;
+        }
+        targetInput.dispatchEvent(new Event('input'));
+    };
+    return btn;
+}
+
+function toggleVirtualKeyboardInfrastructure(show, inputTargetId = null) {
+    targetVirtualKeyboardInputId = inputTargetId;
+    document.getElementById("adaptiveVirtualKeyboardWidget").style.display = show ? "flex" : "none";
+}
+
+/* NUEVA INTERFAZ EXCLUSIVA PARA EL CONTROL DE LA CALCULADORA FLOTANTE */
+function toggleCalculatorWidgetVisibility(openAndDisplay) {
+    const calcWidget = document.getElementById("microCalculatorDockComponent");
+    calcWidget.style.display = openAndDisplay ? "block" : "none";
+    if(openAndDisplay) {
+        dispatchGlobalToastNotification("CALCULADORA ACTIVA", "Módulo de cálculo matemático desplegado.");
+    }
+}
+
+const calcMatrixButtons = [
+    "7","8","9","/",
+    "4","5","6","*",
+    "1","2","3","-",
+    "0",".","=","+",
+    "C","sin","cos","sqrt"
+];
+
+function toggleCalculatorTypeMode() {
+    currentCalculatorModeScientific = !currentCalculatorModeScientific;
+    document.getElementById("lblCalcMode").textContent = currentCalculatorModeScientific ? "Modo: Científica" : "Modo: Estándar";
+    renderCalculatorButtonsMatrix();
+}
+
+function renderCalculatorButtonsMatrix() {
+    const container = document.getElementById("calcButtonsContainerLayout");
+    container.innerHTML = "";
+
+    calcMatrixButtons.forEach(b => {
+        if(!currentCalculatorModeScientific && ["sin","cos","sqrt"].includes(b)) return;
+        const btn = document.createElement("button");
+        btn.className = "calc-btn-node";
+        btn.textContent = b;
+        btn.onclick = () => processCalculatorInputPipeline(b);
+        container.appendChild(btn);
+    });
+}
+
+let runningCalculatorStringExpression = "";
+function processCalculatorInputPipeline(inputToken) {
+    const screen = document.getElementById("lblCalcDisplayScreen");
+    if(inputToken === 'C') {
+        runningCalculatorStringExpression = "";
+        screen.textContent = "0";
+    } else if(inputToken === '=') {
+        try {
+            let res = eval(runningCalculatorStringExpression);
+            screen.textContent = res;
+            runningCalculatorStringExpression = String(res);
+        } catch(err) {
+            screen.textContent = "Error";
+            runningCalculatorStringExpression = "";
+        }
+    } else if(['sin','cos','sqrt'].includes(inputToken)) {
+        try {
+            let val = parseFloat(screen.textContent);
+            let res = 0;
+            if(inputToken === 'sin') res = Math.sin(val);
+            if(inputToken === 'cos') res = Math.cos(val);
+            if(inputToken === 'sqrt') res = Math.sqrt(val);
+            screen.textContent = res.toFixed(4);
+            runningCalculatorStringExpression = String(res);
+        } catch(e) { screen.textContent = "Error"; }
+    } else {
+        runningCalculatorStringExpression += inputToken;
+        screen.textContent = runningCalculatorStringExpression;
+    }
+}
+
+const helpKnowledgeDatabaseArray = [
+    { trigger: "contraseña", txt: "Para cambiar su contraseña, ingrese a la pestaña Ajustes e inicie el restablecimiento de emergencia vía WhatsApp." },
+    { trigger: "recargar", txt: "Las recargas se realizan en la consola de administración editando el saldo del usuario directamente en la tabla." },
+    { trigger: "cita", txt: "Para agendar una cita, ingrese a la pestaña de Citas, seleccione fecha, hora y pulse en Confirmar Turno." }
+];
+
+function filterSettingsHelpEngine() {
+    const val = document.getElementById("txtSettingsHelpSearchField").value.trim().toLowerCase();
+    const container = document.getElementById("settingsHelpResultsContainer");
+    container.innerHTML = "";
+
+    if(!val) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:12px;">Escriba un concepto para ver la guía de resolución inmediata.</p>`;
+        return;
+    }
+
+    const matched = helpKnowledgeDatabaseArray.filter(h => h.trigger.includes(val));
+    matched.forEach(m => {
+        container.innerHTML += `
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px; border-radius:6px; font-size:12px;">
+                <strong style="color:var(--gold); text-transform:uppercase;">📌 Ayuda: ${m.trigger}</strong>
+                <p style="color:var(--text-main); margin-top:4px;">${m.txt}</p>
+            </div>
+        `;
+    });
+}
+
+function triggerEmergencyPasswordResetPipeline() {
+    const newPass = document.getElementById("txtSettingsResetPassword").value.trim();
+    if(!newPass || !activeSession) {
+        alert("Acción inválida: Debe estar autenticado y definir una nueva contraseña estructural.");
+        return;
+    }
+    activeSession.password = newPass;
+    const match = users.find(u => u.accountId === activeSession.accountId);
+    if(match) match.password = newPass;
+    saveEcosystemStateToDisk();
+
+    const textPayload = encodeURIComponent(`[JimmyStyle 💈] Alerta de Seguridad: Solicito la reactivación y actualización de mi credencial de ingreso segura. ID: ${activeSession.accountId}, Nueva Clave: ${newPass}`);
+    window.open(`https://wa.me/57${activeSession.phone}?text=${textPayload}`, "_blank");
+    
+    document.getElementById("txtSettingsResetPassword").value = "";
+    dispatchGlobalToastNotification("CLAVE ACTUALIZADA", "Nueva clave registrada. Mensaje automático enviado vía WhatsApp.");
+}
+
+window.onload = function() {
+    displayGlobalLoadingOverlay(true, "Inicializando Ecosistema de Big Data...");
+    setTimeout(() => {
+        executeMemoryAllocationEngine();
+        evaluateGlobalNavigationTabTriggers();
+        renderForumStreamEngine();
+        renderAdaptiveVirtualKeyboardInfrastructure();
+        renderCalculatorButtonsMatrix();
+        renderPassportProfileDisplay();
+        renderClientAppointmentsHistoricalQueue();
+        
+        displayGlobalLoadingOverlay(false);
+        dispatchGlobalToastNotification("SISTEMA CORE ONLINE", "JimmyStyle Pro v9.4 cargado con redundancia conforme.");
+    }, 800);
+};
+</script>
+</body>
+</html>
